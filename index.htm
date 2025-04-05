@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Redirect Page Generator | CreatedByDMO</title>
+  <title>Redirect Link Generator | CreatedByDMO</title>
   <style>
     body {
       font-family: sans-serif;
-      max-width: 500px;
+      max-width: 600px;
       margin: 50px auto;
       text-align: center;
       padding: 20px;
@@ -14,84 +14,62 @@
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-    input {
+    input, button {
       width: 100%;
-      padding: 10px;
-      margin: 15px 0;
+      padding: 12px;
+      margin: 10px 0;
       font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
     }
     button {
-      padding: 12px 20px;
       background: black;
       color: white;
-      font-size: 16px;
-      border: none;
       cursor: pointer;
-      border-radius: 5px;
     }
     small {
       display: block;
       margin-top: 20px;
       color: gray;
     }
+    #generatedLink {
+      display: none;
+      margin-top: 20px;
+    }
     a {
       color: blue;
       text-decoration: none;
-      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <h2>Redirect Page Generator</h2>
-  <p>Paste your link below to generate your own redirect page.</p>
-  <input type="text" id="linkInput" placeholder="https://example.com" />
-  <button onclick="generate()">Download Redirect Page</button>
-  <small>Upload to GitHub → Enable GitHub Pages → Share your redirect link!</small>
-  
-  <div id="browserMessage" style="display:none;">
-    <p>To access the link outside Instagram, <a id="externalLink" href="#" target="_blank">click here to open in your browser</a>.</p>
+  <h2>Redirect Link Generator</h2>
+  <p>Paste your link below to generate your own redirect link.</p>
+  <input type="text" id="linkInput" placeholder="Enter your URL here (e.g., https://example.com)" />
+  <button onclick="generateRedirect()">Generate Redirect Link</button>
+
+  <div id="generatedLink">
+    <h3>Your Redirect Link:</h3>
+    <a id="copyLink" href="" target="_blank">Copy and paste this link to use in your browser.</a>
+    <small>Share this link to redirect others to your URL instantly!</small>
   </div>
 
   <script>
-    function generate() {
+    function generateRedirect() {
       const link = document.getElementById('linkInput').value.trim();
       if (!link.startsWith('http')) {
         alert("Please enter a valid link starting with http or https");
         return;
       }
 
-      const htmlContent = `
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="refresh" content="0; url=${link}" />
-    <title>Redirecting...</title>
-  </head>
-  <body>
-    <p>If you are not redirected, <a href="${link}" target="_blank">click here</a> to open the link in your browser.</p>
-  </body>
-</html>`;
+      // Update the base URL to your custom redirect URL
+      const generatedLink = `https://createdbydmo.github.io/redirect-linkbydmo/?url=${encodeURIComponent(link)}`;
 
-      const blob = new Blob([htmlContent], { type: "text/html" });
-      const file = new File([blob], "index.html", { type: "text/html" });
-
-      const zip = new JSZip();
-      zip.file("index.html", file);
-
-      zip.generateAsync({ type: "blob" }).then(function(content) {
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(content);
-        a.download = "redirect.zip";
-        a.click();
-      });
-
-      // Show browser message
-      document.getElementById("browserMessage").style.display = "block";
-      document.getElementById("externalLink").href = link;
+      // Display the generated link for the user to copy
+      document.getElementById('generatedLink').style.display = 'block';
+      document.getElementById('copyLink').href = generatedLink;
+      document.getElementById('copyLink').textContent = generatedLink;
     }
   </script>
-
-  <!-- JSZip CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
 </body>
 </html>
